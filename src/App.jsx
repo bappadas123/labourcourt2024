@@ -11,6 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import TestFormTwo from './Component/TestFormTwo'
 import UserList from './Component/UserList'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import ShopAddress from './Component/ShopAddress'
 
 
 function App() {
@@ -27,6 +28,9 @@ function App() {
               <li>
                 <Link to="/addUser" >Add User</Link>
               </li>
+               <li>
+                <Link to="/shopAddress" >Shop Address </Link>
+              </li>
               
             </ul>
           </nav>
@@ -37,7 +41,7 @@ function App() {
             <Route path="/addUser" element={<TestForm />} />
             <Route path="/edit/:id" element={<EditUser/>} />
            
-  
+             <Route path="/shopAddress" element={<ShopAddress />} />
           
           </Routes>
           </div>

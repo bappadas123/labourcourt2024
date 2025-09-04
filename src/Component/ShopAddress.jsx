@@ -2,17 +2,21 @@
 import React , { useState , useEffect } from 'react'
 import axios from 'axios';
 
-function ShopAddress() {
+function ShopAddress({ onDropdownChange }) {
 
     const [selectedDistrictValue, setDisValue] = useState(''); 
      //const [selectedSubdivisionValue, setSubValue] = useState(''); // Initial selected value
 
   const [districtOptions, setDistrictOptions] = useState([]);
   const [subdivisionOptions, setSubOptions] = useState([]);
+  const [selectedSubdiv, setSelectedSubdiv] = useState('');
   const[policeStationOptions, setPoliceStation]=useState([]);
   const[postOfficeOptions, setPostOffice]=useState([]);
-   const [ur, setUr] = useState("");
-     const[ruralUrbanOptions, setruralurban]=useState([]);
+  const [ur, setUr] = useState("");
+  const[ruralUrbanOptions, setruralurban]=useState([]);
+  const[blockmuOptions, setBlockmu]=useState([]);
+
+
 
 
 const UrbanArray = [
@@ -32,6 +36,14 @@ const UrbanArray = [
     setruralurban(UrbanArray);
     else if(event.target.value=='Rural')
     setruralurban(RuralArray);
+    setBlockmu("");
+    //setUr("");
+
+    const { name, value } = event.target;
+     onDropdownChange(name, value);
+
+
+
 
   }
 
@@ -55,13 +67,42 @@ const UrbanArray = [
     console.log("Form submitted:", selectedDistrictValue);
   };
 
- 
+    
+  const handleSuvdivChange = (e) => {
+    setSelectedSubdiv(e.target.value);
+    const { name, value } = e.target;
+     onDropdownChange(name, value);
+    console.log(e.target.value);
+     setruralurban("");
+    setBlockmu("");
+  };
+
+
+  const handlePoliceStation = (e) => {
+   
+    const { name, value } = e.target;
+     onDropdownChange(name, value);
+    
+  };
+
+  const handlePostOffice = (e) => {
+   
+    const { name, value } = e.target;
+     onDropdownChange(name, value);
+    
+  };
 
   
 
   const handleChange = async (event) => {
     setDisValue(event.target.value);
     const district_id = event.target.value;
+    setruralurban("");
+    setBlockmu("");
+    setUr("");
+
+        const { name, value } = event.target;
+        onDropdownChange(name, value);
 
     try {
       
@@ -85,18 +126,18 @@ const UrbanArray = [
 
   const handleBlockMunnicipality = async (event) => {
    // setDisValue(event.target.value);
-   // const district_id = event.target.value;
+    const bm_flag = event.target.value;
+
+
+        const { name, value } = event.target;
+        onDropdownChange(name, value);
 
     try {
       
-       const response1 = await axios.get(`http://localhost:3000/listapi/getshopSubdivision/${district_id}`);
-        setSubOptions(response1.data);
+       const response1 = await axios.get(`http://localhost:3000/listapi/getshopBlockMunicipality/${selectedSubdiv}/${bm_flag}`);
+        setBlockmu(response1.data);
 
-     // const response2 = await axios.get(`http://localhost:3000/listapi/getshopPoliceStation/${district_id}`);
-       // setPoliceStation(response2.data);
-
-      // const response3 = await axios.get(`http://localhost:3000/listapi/getshopPostOffice/${district_id}`);
-      //  setPostOffice(response3.data); 
+     
       
     } catch (error) {
       console.error("Error fetching code options:", error);
@@ -104,10 +145,19 @@ const UrbanArray = [
 
 
   };
+  
+
+
+  const handleBlockMunnicipalityName = async (event) => {
+   
+        const { name, value } = event.target;
+        onDropdownChange(name, value);
+
+  };
 
   return (
     <div>
-
+         <h3>Address:</h3>
        <form onSubmit={handleSubmit}>
       <div className="mb-3">
         <label>
@@ -129,7 +179,7 @@ const UrbanArray = [
            <div className="mb-3">
         <label>
           Sub Division:
-          <select name="subdivision"  >
+          <select name="subdivision" onChange={handleSuvdivChange} >
             <option value="">Select</option>
             {subdivisionOptions.length > 0
               ? subdivisionOptions.map((data) => (
@@ -146,7 +196,7 @@ const UrbanArray = [
            <div className="mb-3">
         <label>
           Police Station:
-          <select name="policestation"  >
+          <select name="policestation" onChange={handlePoliceStation} >
             <option value="">Select</option>
             {policeStationOptions.length > 0
               ? policeStationOptions.map((data) => (
@@ -163,7 +213,7 @@ const UrbanArray = [
           <div className="mb-3">
         <label>
           post office:
-          <select name="postoffice"  >
+          <select name="postoffice" onChange={handlePostOffice} >
             <option value="">Select</option>
             {postOfficeOptions.length > 0
               ? postOfficeOptions.map((data) => (
@@ -184,23 +234,42 @@ const UrbanArray = [
 
        <div className="mb-3">
         <label>
-          Rural Or Urban:
-          <select name="sruur" onChange={handleBlockMunnicipality} >
+          Block or municipality:
+          <select name="blockmunList" onChange={handleBlockMunnicipality} >
             <option value="">Select</option>
             {ruralUrbanOptions.length > 0
               ? ruralUrbanOptions.map((data) => (
-                  <option key={data.id} value={data.uname}>
+                  <option key={data.id} value={data.id}>
                     {data.uname}
                   </option>
                 ))
-              : "loading post office.."}
+              : "loading block or municipality.."}
           </select>
         
         </label>
           </div>
 
+          <div className="mb-3">
+        <label>
+          Block or municipality Name:
+          <select name="blockmunname"  onChange={handleBlockMunnicipalityName}>
+            <option value="">Select</option>
+            {blockmuOptions.length > 0
+              ? blockmuOptions.map((data) => (
+                  <option key={data.block_id} value={data.block_id}>
+                    {data.block}
+                  </option>
+                ))
+              : "loading block or municipality name.."}
+          </select>
+        
+        </label>
+          </div>
 
-        <button type="submit">Submit</button>
+          
+
+
+       
       </form>
       
     </div>

@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import ShopAddress from './ShopAddress';
 
 function TestForm() {
 
@@ -13,6 +14,16 @@ function TestForm() {
     const [email, setEmail] = useState("");
     const [contact, setContact] = useState("");
     const [gender, setGender] = useState("male");
+
+     const[districtDr, setDistrictDr]=useState("");
+     const[subdivisionDr, setsubdivisionDr]=useState("");
+     const[ruralUrban, setRuralUrban]=useState("");
+    const[blockMunList, setBlockMunList]=useState("");
+     const[blockMunName, setBlockMunName]=useState("");
+     const[postoffice, setPostoffice]=useState("");
+      const[policestation, setPolicestation]=useState("");
+    
+
     const navigate = useNavigate();
 
 
@@ -28,14 +39,45 @@ function TestForm() {
         // Add your form submission logic here
     };*/
 
+     const handleDropdownChange = (dropdownName, value) => {
+        if (dropdownName === 'district') {
+          setDistrictDr(value);
+        } else if (dropdownName === 'subdivision') {
+          setsubdivisionDr(value);
+        }
+       else if (dropdownName === 'ruralUrban') {
+          setRuralUrban(value);
+        }
+
+        else if (dropdownName === 'blockmunList') {
+          setBlockMunList(value);
+        }
+        else if (dropdownName === 'blockmunname') {
+          setBlockMunName(value);
+        }
+        else if (dropdownName === 'policestation') {
+          setPolicestation(value);
+        }
+        else if (dropdownName === 'postoffice') {
+          setPostoffice(value);
+        }
+       {/* else if (dropdownName === 'dropdown8') {
+          setsubdivisionDr(value);
+        }*/}
+       
+      };
+
     const saveUser = async (e) => {
         e.preventDefault();
-       /* await axios.post('http://localhost:3000/users/useradd',{
-            name: firstName,
-            email: email
-        });*/
-        //redirect setelah save;
-       // navigate('/');
+
+          console.log("District:"+districtDr);
+          console.log("subdiv:"+subdivisionDr);
+          console.log("ruualur:"+ruralUrban);
+          console.log("blmuop:"+blockMunList);
+          console.log("blmuname:"+blockMunName);
+          console.log("postoffice:"+postoffice);
+          console.log("policestation:"+policestation);
+      
     try {
       const response = await axios.post("http://localhost:3000/users/useradd", {
             name: firstName,
@@ -58,6 +100,7 @@ function TestForm() {
               
            
                 <form  onSubmit={ saveUser } >
+                    <h3>Personal Information:</h3>
                     <Row>
                     <Col md={12}>
                    <Form.Label >
@@ -168,7 +211,7 @@ function TestForm() {
                   
                     </Row>
                    
-                   
+                   <ShopAddress data={userid} onDropdownChange={handleDropdownChange} />
                        
                     
                    {/* <button
